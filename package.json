@@ -1,5 +1,5 @@
 {
-  "name": "davasolutions-express",
+  "name": "yardhouse-solutions-express",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -15,7 +15,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "netlify-lambda": "^2.0.16",
+    "netlify-lambda": "^0.4.0",
     "nodemailer": "^6.9.1",
     "serverless-http": "^3.2.0"
   }
