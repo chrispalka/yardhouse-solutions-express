@@ -7,6 +7,7 @@ const serverless = require('serverless-http');
 const app = express();
 
 app.use(cors());
+app.use(express.json());
 
 const router = express.Router();
 
@@ -17,18 +18,18 @@ router.get('/', (req, res) => {
 });
 
 router.post('/formSubmit', async (req, res) => {
-  let body = JSON.parse(Buffer.from(req.body, 'base64').toString());
-
-  const { firstName, lastName, email, phone, message } = body.data;
+  const { firstName, lastName, email, phone, message } = req.body.data;
 
   const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    name: 'www.gmail.com',
+    host: 'smtp.office365.com',
+    secureConnection: true,
+    port: 587,
     auth: {
-      user: process.env.EMAIL_ADDRESS_FROM,
-      pass: process.env.EMAIL_PASSWORD,
+      user: process.env.EMAIL_ADDRESS_FROM, // Replace with your email
+      pass: process.env.EMAIL_PASSWORD, // Replace with your email password
     },
   });
+
   const mailOptionsToDava = {
     from: process.env.EMAIL_ADDRESS_FROM,
     to: process.env.EMAIL_ADDRESS_TO,
@@ -54,18 +55,11 @@ router.post('/formSubmit', async (req, res) => {
       console.log(response);
     })
     .catch((err) => {
-      res.status(404);
+      res
+        .status(500)
+        .send({ error: 'Email sending failed', details: err.message });
       console.log(err);
     });
-
-  // transporter.sendMail(mailOptionsToRequester, (err, res) => {
-  //   if (err) {
-  //     console.log(err);
-  //     res.status(404)
-  //   } else {
-  //     res.status(200).send('success')
-  //   }
-  // });
 });
 
 app.use('/.netlify/functions/api', router);
